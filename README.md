@@ -36,18 +36,20 @@ docs/        Submission text, pitch deck, demo script
 Requires Node 22+, Foundry (`foundryup`), npm.
 
 ```bash
-# 1. contracts
+# 1. clone with the forge-std submodule
+git clone --recurse-submodules https://github.com/lksxyz/leftoverice
+cd leftoverice
+
+# 2. contracts
 cd contracts
-forge install foundry-rs/forge-std   # first time only
 forge build && forge test
 
-# 2. web
-cd ../web
+# 3. web (install from the repo root — npm workspace)
+cd ..
 npm install
 npm run dev                          # http://localhost:3000
 
-# 3. local chain + demo data (anvil dev keys — never mainnet)
-cd ..
+# 4. local chain + demo data (anvil dev keys — never mainnet)
 bash scripts/deploy-local.sh
 ```
 

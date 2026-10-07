@@ -7,11 +7,10 @@
     "web"
   ],
   "scripts": {
-    "dev": "npm run dev -w web",
+    "dev": "bash scripts/dev.sh",
     "build": "npm run build -w web",
-    "anvil": "anvil --chain-id 31337",
-    "test:contracts": "forge test",
+    "test:contracts": "cd contracts && forge test",
     "deploy:local": "bash scripts/deploy-local.sh",
-    "demo": "bash scripts/demo.sh"
+    "deploy:testnet": "bash scripts/deploy-testnet.sh"
   }
 }
