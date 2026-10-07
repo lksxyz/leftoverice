@@ -1,0 +1,28 @@
+{
+  "id": "bb124d515",
+  "name": "install Foundry",
+  "command": "curl -L https://foundry.paradigm.xyz | bash && export PATH=\"$HOME/.foundry/bin:$PATH\" && foundryup && echo \"FOUNDRY_INSTALL_OK\" && forge --version && cast --version",
+  "status": "failed",
+  "outputPath": ".pi/tasks/01a116e1-d59d-7498-b646-488c1402cc17-105998/bb124d515.output",
+  "cwd": "/home/lukisxyz/Project/hackathon/leftoverice",
+  "startTime": 1791386137539,
+  "endTime": 1791386144717,
+  "exitCode": 127,
+  "signal": null,
+  "pid": 109114,
+  "bytesWritten": 1399,
+  "isAgent": false,
+  "surviveReload": false,
+  "error": "Exited with code 127",
+  "notified": true,
+  "notifyOnCompletion": true,
+  "triggerOnCompletion": true,
+  "shellPolicy": {
+    "policy": "inherit",
+    "executable": "/usr/bin/bash",
+    "argvPrefix": [
+      "-c"
+    ],
+    "dialect": "bash"
+  }
+}

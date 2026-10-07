@@ -1,0 +1,17 @@
+{
+  "name": "leftoverice",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Leftover IDR -> USDC peer-to-peer escrow for crypto nomads in Yogyakarta. AI-verified off-chain payment + on-chain release. Indonesia Web3 Hackathon 2026.",
+  "workspaces": [
+    "web"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w web",
+    "build": "npm run build -w web",
+    "anvil": "anvil --chain-id 31337",
+    "test:contracts": "forge test",
+    "deploy:local": "bash scripts/deploy-local.sh",
+    "demo": "bash scripts/demo.sh"
+  }
+}

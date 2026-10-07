@@ -1,0 +1,33 @@
+
+Using defaults for unprovided options:
+
+  --ts                    TypeScript (use --js for JavaScript)
+  --no-react-compiler     No React Compiler (use --react-compiler for React Compiler)
+  --cache-components      Cache Components (use --no-cache-components for No Cache Components)
+  --agents-md             AGENTS.md (use --no-agents-md for No AGENTS.md)
+  --no-agent-feedback     No agent feedback (use --agent-feedback for Agent feedback)
+
+Creating a new Next.js app in /home/lukisxyz/Project/hackathon/leftoverice/web.
+
+Using npm.
+
+Initializing project with template: app-tw 
+
+Initialized a git repository.
+
+Success! Created web at /home/lukisxyz/Project/hackathon/leftoverice/web
+
+- Preflight checks.
+✔ Preflight checks.
+- Verifying framework.
+✔ Verifying framework. Found Next.js.
+- Validating Tailwind CSS. Found v4.
+✔ Validating Tailwind CSS. Found v4.
+- Validating import alias.
+✔ Validating import alias.
+- Writing components.json.
+✔ Writing components.json.
+- Checking registry.
+✔ Checking registry.
+- Installing dependencies.
+- Installing dependencies.
