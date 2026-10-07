@@ -23,7 +23,7 @@ import {
   SPREAD,
 } from "@/lib/chain";
 import { verifyPayment } from "@/lib/verify";
-import { Check, CheckCircle2, QrCode, Upload, XCircle } from "lucide-react";
+import { ArrowRight, Banknote, Check, CheckCircle2, QrCode, Upload, XCircle } from "lucide-react";
 import {
   Stepper,
   StepperNav,
@@ -47,13 +47,6 @@ export default function TouristPage() {
   const [idr, setIdr] = useState("450000");
   const [offers, setOffers] = useState<Offer[]>([]);
   const [selected, setSelected] = useState<bigint | null>(null);
-  const [uploadState, uploadActions] = useFileUpload({
-    accept: "image/*",
-    multiple: false,
-    maxSize: 10 * 1024 * 1024,
-  });
-  const proof =
-    uploadState.files[0]?.file instanceof File ? uploadState.files[0].file : null;
   const [result, setResult] = useState<{
     approved: boolean;
     confidence: number;
@@ -63,6 +56,14 @@ export default function TouristPage() {
   const [balance, setBalance] = useState("0");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+
+  const [uploadState, uploadActions] = useFileUpload({
+    accept: "image/*",
+    multiple: false,
+    maxSize: 10 * 1024 * 1024,
+  });
+  const proof =
+    uploadState.files[0]?.file instanceof File ? uploadState.files[0].file : null;
 
   const loadOffers = useCallback(async () => {
     try {
@@ -159,7 +160,9 @@ export default function TouristPage() {
         </Link>
         <div className="flex items-center gap-2">
           {signer ? (
-            <Badge variant="secondary">{mode === "demo" ? "demo" : "wallet"} · {shortAddr(address)}</Badge>
+            <Badge variant="secondary">
+              {mode === "demo" ? "demo" : "wallet"} · <span className="font-mono">{shortAddr(address)}</span>
+            </Badge>
           ) : (
             <>
               <Button size="sm" variant="outline" onClick={useDemo}>
@@ -173,19 +176,23 @@ export default function TouristPage() {
         </div>
       </header>
 
-      <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <span className="font-medium">Tourist — rupiah → USDC</span>
-        <span>
-          Step {step + 1} of {STEPS.length}
-        </span>
+      <div className="flex items-center gap-2 rounded-xl border border-tourist/25 bg-tourist-soft px-3 py-2 text-tourist-soft-foreground">
+        <Banknote className="size-4 shrink-0" />
+        <span className="text-sm font-semibold">You swap rupiah → USDC</span>
       </div>
 
-      <Stepper value={step} onValueChange={setStep} indicators={{ completed: <Check className="size-3" /> }}>
+      <Stepper
+        value={step}
+        onValueChange={setStep}
+        indicators={{ completed: <Check className="size-3" /> }}
+      >
         <StepperNav>
           {STEPS.map((s, i) => (
             <StepperItem key={s} step={i}>
               <StepperTrigger className="p-0">
-                <StepperIndicator>{i + 1}</StepperIndicator>
+                <StepperIndicator className="data-[state=active]:bg-tourist data-[state=active]:text-tourist-foreground data-[state=completed]:bg-tourist data-[state=completed]:text-tourist-foreground">
+                  {i + 1}
+                </StepperIndicator>
               </StepperTrigger>
               {i < STEPS.length - 1 && <StepperSeparator />}
             </StepperItem>
@@ -195,7 +202,7 @@ export default function TouristPage() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertTitle>Error</AlertTitle>
+          <AlertTitle>Something went wrong</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -205,7 +212,8 @@ export default function TouristPage() {
           <CardHeader>
             <CardTitle>How much rupiah is left?</CardTitle>
             <CardDescription>
-              Rate {IDR_PER_USDC.toLocaleString()} IDR/USDC · spread {(SPREAD * 100).toFixed(0)}%
+              Enter your leftover cash and we show the USDC you&apos;d receive. Rate{" "}
+              {IDR_PER_USDC.toLocaleString()} IDR/USDC, spread {(SPREAD * 100).toFixed(0)}%.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -217,15 +225,21 @@ export default function TouristPage() {
                 inputMode="numeric"
                 value={idr}
                 onChange={(e) => setIdr(e.target.value)}
-                className="mt-1 text-lg"
+                className="mt-1.5 text-lg"
               />
             </div>
-            <div className="rounded-lg bg-muted p-3 text-center">
-              <div className="text-xs text-muted-foreground">You receive ≈</div>
-              <div className="text-2xl font-bold">{usdcQuote} USDC</div>
+            <div className="rounded-xl border border-tourist/25 bg-tourist-soft p-4 text-center">
+              <div className="text-xs font-medium text-tourist-soft-foreground/80">
+                You receive ≈
+              </div>
+              <div className="text-3xl font-bold text-tourist-soft-foreground">{usdcQuote} USDC</div>
             </div>
-            <Button className="w-full" disabled={!signer || !idr} onClick={() => setStep(1)}>
-              Find providers
+            <Button
+              className="w-full bg-tourist text-tourist-foreground hover:bg-tourist/90"
+              disabled={!signer || !idr}
+              onClick={() => setStep(1)}
+            >
+              Find providers <ArrowRight className="size-4" />
             </Button>
           </CardContent>
         </Card>
@@ -235,22 +249,33 @@ export default function TouristPage() {
         <Card>
           <CardHeader>
             <CardTitle>Choose a provider</CardTitle>
-            <CardDescription>≈ {usdcQuote} USDC · pick the nearest offer</CardDescription>
+            <CardDescription>
+              ≈ {usdcQuote} USDC · pick a freelancer who already locked USDC in escrow.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             {offers.length === 0 && (
-              <p className="text-sm text-muted-foreground">No open offers yet. Ask a provider to lock USDC.</p>
+              <p className="text-sm text-muted-foreground">
+                No open offers yet. Ask a provider to lock USDC, then come back.
+              </p>
             )}
             {offers.map((o) => (
               <div
                 key={o.id.toString()}
-                className="flex items-center justify-between rounded-lg border p-3"
+                className="flex items-center justify-between gap-3 rounded-xl border p-3"
               >
-                <div>
-                  <div className="font-medium">{fmtUsdc(o.amount)} USDC</div>
-                  <div className="text-xs text-muted-foreground">Provider {shortAddr(o.provider)}</div>
+                <div className="min-w-0">
+                  <div className="font-semibold">{fmtUsdc(o.amount)} USDC</div>
+                  <div className="truncate font-mono text-xs text-muted-foreground">
+                    {shortAddr(o.provider)}
+                  </div>
                 </div>
-                <Button size="sm" disabled={busy} onClick={() => match(o.id)}>
+                <Button
+                  size="sm"
+                  className="bg-tourist text-tourist-foreground hover:bg-tourist/90"
+                  disabled={busy}
+                  onClick={() => match(o.id)}
+                >
                   Match
                 </Button>
               </div>
@@ -264,18 +289,24 @@ export default function TouristPage() {
           <CardHeader>
             <CardTitle>Pay the provider</CardTitle>
             <CardDescription>
-              {selectedOffer
-                ? `${fmtUsdc(selectedOffer.amount)} USDC ↔ ${Number(idr).toLocaleString()} IDR`
-                : ""}
+              Send {Number(idr).toLocaleString()} IDR via QRIS. Your USDC stays locked until the
+              payment is verified.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="mx-auto flex flex-col items-center gap-2 rounded-xl border border-dashed p-6">
-              <QrCode className="size-24 text-foreground" />
-              <div className="text-sm font-medium">QRIS · {Number(idr).toLocaleString()} IDR</div>
-              <div className="text-xs text-muted-foreground">Provider {selectedOffer ? shortAddr(selectedOffer.provider) : ""}</div>
+            <div className="mx-auto flex flex-col items-center gap-2 rounded-xl border border-tourist/25 bg-tourist-soft p-6">
+              <QrCode className="size-24 text-tourist" />
+              <div className="font-semibold text-tourist-soft-foreground">
+                QRIS · {Number(idr).toLocaleString()} IDR
+              </div>
+              <div className="font-mono text-xs text-tourist-soft-foreground/75">
+                {selectedOffer ? shortAddr(selectedOffer.provider) : ""}
+              </div>
             </div>
-            <Button className="w-full" onClick={() => setStep(3)}>
+            <Button
+              className="w-full bg-tourist text-tourist-foreground hover:bg-tourist/90"
+              onClick={() => setStep(3)}
+            >
               I&apos;ve paid
             </Button>
           </CardContent>
@@ -286,12 +317,16 @@ export default function TouristPage() {
         <Card>
           <CardHeader>
             <CardTitle>Upload proof of payment</CardTitle>
-            <CardDescription>Receipt photo or transfer screenshot</CardDescription>
+            <CardDescription>
+              A receipt photo or transfer screenshot. The AI checks amount, recipient and time.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div
               className={`flex cursor-pointer flex-col items-center gap-2 rounded-xl border border-dashed p-6 text-center transition-colors ${
-                uploadState.isDragging ? "border-primary bg-primary/5" : "border-border"
+                uploadState.isDragging
+                  ? "border-tourist bg-tourist-soft"
+                  : "border-border"
               }`}
               onClick={uploadActions.openFileDialog}
               onDragEnter={uploadActions.handleDragEnter}
@@ -313,13 +348,17 @@ export default function TouristPage() {
                 </>
               ) : (
                 <>
-                  <Upload className="size-8 text-muted-foreground" />
+                  <Upload className="size-8 text-tourist" />
                   <span className="text-sm">Tap or drop a receipt image</span>
                 </>
               )}
               <input {...uploadActions.getInputProps()} className="hidden" />
             </div>
-            <Button className="w-full" disabled={!proof || busy} onClick={verify}>
+            <Button
+              className="w-full bg-tourist text-tourist-foreground hover:bg-tourist/90"
+              disabled={!proof || busy}
+              onClick={verify}
+            >
               {busy ? "Verifying…" : "Verify payment"}
             </Button>
           </CardContent>
@@ -334,21 +373,25 @@ export default function TouristPage() {
           <CardContent className="space-y-3">
             <div className="flex items-center gap-2">
               {result.approved ? (
-                <CheckCircle2 className="size-6 text-green-500" />
+                <CheckCircle2 className="size-6 shrink-0 text-success" />
               ) : (
-                <XCircle className="size-6 text-destructive" />
+                <XCircle className="size-6 shrink-0 text-destructive" />
               )}
               <div>
-                <div className="font-semibold">{result.approved ? "Payment verified" : "Payment rejected"}</div>
-                <div className="text-xs text-muted-foreground">confidence {(result.confidence * 100).toFixed(0)}%</div>
+                <div className="font-semibold">
+                  {result.approved ? "Payment verified" : "Payment rejected"}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  AI confidence {(result.confidence * 100).toFixed(0)}%
+                </div>
               </div>
             </div>
             <p className="text-sm text-muted-foreground">{result.reason}</p>
             {result.approved && (
               <>
-                <div className="rounded-lg bg-muted p-3 text-center">
-                  <div className="text-xs text-muted-foreground">Your balance</div>
-                  <div className="text-2xl font-bold">{balance} USDC</div>
+                <div className="rounded-xl border border-success/25 bg-success-soft p-4 text-center">
+                  <div className="text-xs font-medium text-success">Your balance</div>
+                  <div className="text-3xl font-bold text-success">{balance} USDC</div>
                 </div>
                 {result.txHash &&
                   (txUrl(result.txHash) ? (
@@ -356,12 +399,12 @@ export default function TouristPage() {
                       href={txUrl(result.txHash)!}
                       target="_blank"
                       rel="noreferrer"
-                      className="block text-center text-sm text-primary underline"
+                      className="block text-center text-sm font-medium text-success underline underline-offset-4"
                     >
                       View release on block explorer ↗
                     </a>
                   ) : (
-                    <div className="break-all text-center text-xs text-muted-foreground">
+                    <div className="break-all text-center font-mono text-xs text-muted-foreground">
                       tx {result.txHash}
                     </div>
                   ))}
