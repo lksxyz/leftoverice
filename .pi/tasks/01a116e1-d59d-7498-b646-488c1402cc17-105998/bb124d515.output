@@ -1,20 +1,0 @@
-  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
-                                 Dload  Upload  Total   Spent   Left   Speed
-  0      0   0      0   0      0      0      0                              0100    167   0    167   0      0    584      0                              0100    167   0    167   0      0    350      0                              0
-  0      0   0      0   0      0      0      0                              0100  12908 100  12908   0      0  14460      0                              0100  12908 100  12908   0      0  14459      0                              0100  12908 100  12908   0      0  14458      0                              0
-foundryup-init: installing latest foundryup
-foundryup-init: downloading attestation...
-foundryup-init: verifying attestation...
-foundryup-init: downloading foundryup...
-foundryup-init: verifying binary integrity...
-foundryup-init: binary verified ✓
-foundryup-init: installing foundryup to /home/lukisxyz/.config/.foundry/bin...
-foundryup-init: 
-foundryup-init: foundryup was installed successfully!
-foundryup-init: 
-foundryup-init: To get started, add foundryup to your PATH:
-foundryup-init: 
-foundryup-init:   export PATH="$PATH:/home/lukisxyz/.config/.foundry/bin"
-foundryup-init: 
-foundryup-init: Then run 'foundryup' to install Foundry.
-/usr/bin/bash: line 1: foundryup: command not found
