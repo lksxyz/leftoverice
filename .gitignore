@@ -9,3 +9,10 @@ broadcast/
 .DS_Store
 *.log
 .pi/
+
+# agent tooling auto-installed by shadcn/ReUI CLI
+.agents/
+.claude/
+.cursor/
+.opencode/
+.mcp.json
